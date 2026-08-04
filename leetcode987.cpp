@@ -10,40 +10,44 @@
  * };
  */
 class Solution {
-public:
-    void solve(int row, int col, TreeNode*node,  map<int, map<int, vector<int>>>&mp){
-        if(!node ) return;
-        
-        mp[col][row].push_back(node->val);
-
-        if(node->left){
-            solve(row+1, col-1, node->left, mp);
-        }
-        if(node->right){
-            solve(row+1, col+1, node->right,mp);
-        }
-
+private:
+    void solve(int col, int row, TreeNode* node, map<int, map<int, vector<int>>>&mp){
+        if(!node) return ;// since it reaches a leaf node
+        mp[col][row].push_back(node->val); //recording the values
+         //traverse
+        // when going in the left
+        solve(col-1, row+1, node->left, mp);
+        //when going right
+        solve(col+1, row+1, node->right, mp);
 
     }
+public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
+        //create an empty res to return if root is not present
         vector<vector<int>>res;
         if(!root) return res;
+        //a func to traverse and store the data in col->row->vector way so that we can sort if there are multiple values in the same row at the end
         map<int, map<int, vector<int>>>mp;
-        //since we need row and col and we need to store a list of nodes and also need sorting, so this is a useful ds
-        solve(0, 0, root, mp); //calling the root
-        for(auto &col: mp){
-            vector<int>ans;
-            for(auto &row:col.second){
-                vector<int>curr = row.second;
-                sort(curr.begin(), curr.end());
-                for(int val: curr){
+        solve(0, 0, root, mp); //start from the root
+
+        //after recording values, now arrange them and return the 2d vector
+        for(auto col:mp){
+            vector<int>ans; /*for curr col*/
+            for(auto row: col.second ){
+                vector<int>curr = row.second; //access the vector
+                sort(curr.begin(), curr.end()); //sort the vector
+                //this is the only one instance and there could be multiple instance at this col
+                for(int val:curr){
                     ans.push_back(val);
                 }
-                
+                //push the vector in the resulting 2d vec
             }
             res.push_back(ans);
         }
         return res;
+
+
+
 
     }
 };
