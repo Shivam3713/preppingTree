@@ -25,6 +25,6 @@ public:
         vector<int>res;
         if(!root) return res;
         dfs(root, 0, res);
+        return res;
     }
-    return res;
 };
